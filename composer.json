@@ -1,0 +1,19 @@
+{
+    "name": "jsl/router",
+    "description": "A router",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Magnus Eriksson",
+            "email": "mange@reloop.se"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Jsl\\Router\\": "src/"
+        }
+    },
+    "require": {}
+}
