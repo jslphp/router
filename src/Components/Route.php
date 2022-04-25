@@ -18,7 +18,7 @@ class Route implements RouteInterface
     protected string $pattern;
 
     /**
-     * @var callable
+     * @var array|callable
      */
     protected mixed $controller;
 
@@ -41,9 +41,9 @@ class Route implements RouteInterface
     /**
      * @param string $method
      * @param string $pattern
-     * @param callable $controller
+     * @param array|callable $controller
      */
-    public function __construct(string $method, string $pattern, callable $controller, NamesInterface $names = null)
+    public function __construct(string $method, string $pattern, array|callable $controller, NamesInterface $names = null)
     {
         $this->method = strtoupper($method);
         $this->pattern = '/' . trim($pattern, '/ ');
@@ -73,7 +73,7 @@ class Route implements RouteInterface
     /**
      * @inheritDoc
      */
-    public function getController(): callable
+    public function getController(): array|callable
     {
         return $this->controller;
     }
@@ -91,7 +91,7 @@ class Route implements RouteInterface
     /**
      * @inheritDoc
      */
-    public function addMiddlewares(callable ...$middlewares): self
+    public function addMiddlewares(array|callable ...$middlewares): self
     {
         if (empty($middlewares)) {
             return $this;

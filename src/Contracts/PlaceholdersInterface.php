@@ -53,7 +53,7 @@ interface PlaceholdersInterface
      * @param string $string
      * @param bool $isQuoted true if stirng is already preg_quote'd (defaults to false)
      *
-     * @return void
+     * @return string
      */
     public function regexify(string $string, bool $isQuoted = false): string;
 }

@@ -12,60 +12,60 @@ interface RouterInterface
      * Add a GET route
      *
      * @param string $pattern
-     * @param callable $controller
+     * @param array|callable $controller
      * @param array $options
      *
      * @return RouteInterface
      */
-    public function get(string $pattern, callable $controller): RouteInterface;
+    public function get(string $pattern, array|callable $controller): RouteInterface;
 
 
     /**
      * Add a POST route
      *
      * @param string $pattern
-     * @param callable $controller
+     * @param array|callable $controller
      * @param array $options
      *
      * @return RouteInterface
      */
-    public function post(string $pattern, callable $controller): RouteInterface;
+    public function post(string $pattern, array|callable $controller): RouteInterface;
 
 
     /**
      * Add a PUT route
      *
      * @param string $pattern
-     * @param callable $controller
+     * @param array|callable $controller
      * @param array $options
      *
      * @return RouteInterface
      */
-    public function put(string $pattern, callable $controller): RouteInterface;
+    public function put(string $pattern, array|callable $controller): RouteInterface;
 
 
     /**
      * Add a DELETE route
      *
      * @param string $pattern
-     * @param callable $controller
+     * @param array|callable $controller
      * @param array $options
      *
      * @return RouteInterface
      */
-    public function delete(string $pattern, callable $controller): RouteInterface;
+    public function delete(string $pattern, array|callable $controller): RouteInterface;
 
 
     /**
      * Add a ANY route
      *
      * @param string $pattern
-     * @param callable $controller
+     * @param array|callable $controller
      * @param array $options
      *
      * @return RouteInterface
      */
-    public function any(string $pattern, callable $controller): RouteInterface;
+    public function any(string $pattern, array|callable $controller): RouteInterface;
 
 
     /**
@@ -73,12 +73,12 @@ interface RouterInterface
      *
      * @param string $method
      * @param string $pattern
-     * @param callable $controller
+     * @param array|callable $controller
      * @param array $options
      *
      * @return RouteInterface
      */
-    public function addRoute(string $method, string $pattern, callable $controller): RouteInterface;
+    public function addRoute(string $method, string $pattern, array|callable $controller): RouteInterface;
 
 
     /**

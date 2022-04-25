@@ -76,7 +76,7 @@ class Router implements RouterInterface
     /**
      * @inheritDoc
      */
-    public function get(string $pattern, callable $controller): RouteInterface
+    public function get(string $pattern, array|callable $controller): RouteInterface
     {
         return $this->addRoute('GET', $pattern, $controller);
     }
@@ -85,7 +85,7 @@ class Router implements RouterInterface
     /**
      * @inheritDoc
      */
-    public function post(string $pattern, callable $controller): RouteInterface
+    public function post(string $pattern, array|callable $controller): RouteInterface
     {
         return $this->addRoute('POST', $pattern, $controller);
     }
@@ -94,7 +94,7 @@ class Router implements RouterInterface
     /**
      * @inheritDoc
      */
-    public function put(string $pattern, callable $controller): RouteInterface
+    public function put(string $pattern, array|callable $controller): RouteInterface
     {
         return $this->addRoute('PUT', $pattern, $controller);
     }
@@ -103,7 +103,7 @@ class Router implements RouterInterface
     /**
      * @inheritDoc
      */
-    public function delete(string $pattern, callable $controller): RouteInterface
+    public function delete(string $pattern, array|callable $controller): RouteInterface
     {
         return $this->addRoute('DELETE', $pattern, $controller);
     }
@@ -112,7 +112,7 @@ class Router implements RouterInterface
     /**
      * @inheritDoc
      */
-    public function any(string $pattern, callable $controller): RouteInterface
+    public function any(string $pattern, array|callable $controller): RouteInterface
     {
         return $this->addRoute('ANY', $pattern, $controller);
     }
@@ -121,7 +121,7 @@ class Router implements RouterInterface
     /**
      * @inheritDoc
      */
-    public function addRoute(string $method, string $pattern, callable $controller): RouteInterface
+    public function addRoute(string $method, string $pattern, array|callable $controller): RouteInterface
     {
         // Add group prefixes
         $pattern = $this->groups->decoratePrefix($pattern);
@@ -207,6 +207,12 @@ class Router implements RouterInterface
             }
         }
 
-        return call_user_func_array($route->getController(), $arguments);
+        $controller = $route->getController();
+
+        if ($controller && is_array($controller) && count($controller) === 2 && is_string($controller[0])) {
+            $controller[0] = new $controller[0];
+        }
+
+        return call_user_func_array($controller, $arguments);
     }
 }

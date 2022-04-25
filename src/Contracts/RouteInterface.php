@@ -23,19 +23,19 @@ interface RouteInterface
     /**
      * Get route controller
      *
-     * @return callable
+     * @return array|callable
      */
-    public function getController(): callable;
+    public function getController(): array|callable;
 
 
     /**
      * Add before middlewares
      *
-     * @param callable ...$middlewares
+     * @param array|callable ...$middlewares
      *
      * @return self
      */
-    public function addMiddlewares(callable ...$middlewares): self;
+    public function addMiddlewares(array|callable ...$middlewares): self;
 
 
     /**
