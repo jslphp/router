@@ -63,7 +63,7 @@ class RouteCollection implements RouteCollectionInterface
     public function find(string $method, string $path): RouteInterface
     {
         if (isset($this->routes[$path][$method])) {
-            return $this->routes[$path][$method]->addFixedArguments($this->fixedArguments);
+            return $this->routes[$path][$method]->addArguments($this->fixedArguments);
         }
 
         $wrongMethod = false;
