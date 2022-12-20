@@ -11,25 +11,25 @@ interface RouterInterface
     /**
      * Add a GET route
      *
-     * @param string $pattern
+     * @param string $path
      * @param array|callable $controller
      * @param array $options
      *
      * @return RouteInterface
      */
-    public function get(string $pattern, array|callable $controller): RouteInterface;
+    public function get(string $path, array|callable $controller): RouteInterface;
 
 
     /**
      * Add a POST route
      *
-     * @param string $pattern
+     * @param string $path
      * @param array|callable $controller
      * @param array $options
      *
      * @return RouteInterface
      */
-    public function post(string $pattern, array|callable $controller): RouteInterface;
+    public function post(string $path, array|callable $controller): RouteInterface;
 
 
     /**
@@ -79,6 +79,26 @@ interface RouterInterface
      * @return RouteInterface
      */
     public function addRoute(string $method, string $pattern, array|callable $controller): RouteInterface;
+
+
+    /**
+     * Add multiple routes from an array of groups and routes
+     *
+     * @param array $groups
+     * 
+     * @return self
+     */
+    public function addRoutesFromArray(array $groups): self;
+
+
+    /**
+     * Add routes defined as class attributes
+     *
+     * @param string|array $class A string with or an array of fully qualified class names
+     *
+     * @return self
+     */
+    public function addRoutesFromClassAttributes(string|array $class): self;
 
 
     /**
