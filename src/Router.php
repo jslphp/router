@@ -4,6 +4,8 @@ namespace Jsl\Router;
 
 use Closure;
 use InvalidArgumentException;
+use Jsl\Router\Components\Attributes;
+use Jsl\Router\Components\AttributesParser;
 use Jsl\Router\Components\Groups;
 use Jsl\Router\Components\Names;
 use Jsl\Router\Components\Placeholders;
@@ -76,60 +78,60 @@ class Router implements RouterInterface
     /**
      * @inheritDoc
      */
-    public function get(string $pattern, array|callable $controller): RouteInterface
+    public function get(string $path, array|callable $controller): RouteInterface
     {
-        return $this->addRoute('GET', $pattern, $controller);
+        return $this->addRoute('GET', $path, $controller);
     }
 
 
     /**
      * @inheritDoc
      */
-    public function post(string $pattern, array|callable $controller): RouteInterface
+    public function post(string $path, array|callable $controller): RouteInterface
     {
-        return $this->addRoute('POST', $pattern, $controller);
+        return $this->addRoute('POST', $path, $controller);
     }
 
 
     /**
      * @inheritDoc
      */
-    public function put(string $pattern, array|callable $controller): RouteInterface
+    public function put(string $path, array|callable $controller): RouteInterface
     {
-        return $this->addRoute('PUT', $pattern, $controller);
+        return $this->addRoute('PUT', $path, $controller);
     }
 
 
     /**
      * @inheritDoc
      */
-    public function delete(string $pattern, array|callable $controller): RouteInterface
+    public function delete(string $path, array|callable $controller): RouteInterface
     {
-        return $this->addRoute('DELETE', $pattern, $controller);
+        return $this->addRoute('DELETE', $path, $controller);
     }
 
 
     /**
      * @inheritDoc
      */
-    public function any(string $pattern, array|callable $controller): RouteInterface
+    public function any(string $path, array|callable $controller): RouteInterface
     {
-        return $this->addRoute('ANY', $pattern, $controller);
+        return $this->addRoute('ANY', $path, $controller);
     }
 
 
     /**
      * @inheritDoc
      */
-    public function addRoute(string $method, string $pattern, array|callable $controller): RouteInterface
+    public function addRoute(string $method, string $path, array|callable $controller): RouteInterface
     {
         // Add group prefixes
-        $pattern = $this->groups->decoratePrefix($pattern);
+        $path = $this->groups->decoratePrefix($path);
 
         /**
          * @var RouteInterface
          */
-        $route = new $this->routeClass($method, $pattern, $controller, $this->names);
+        $route = new $this->routeClass($method, $path, $controller, $this->names);
 
         // Add group middlewares
         if ($middlewares = $this->groups->getMiddlewares()) {
@@ -139,6 +141,52 @@ class Router implements RouterInterface
         $this->collection->add($route);
 
         return $route;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function addRoutesFromArray(array $groups): self
+    {
+        foreach ($groups as $groupInfo) {
+            $group = [
+                'prefix' => $groupInfo['prefix'] ?? '',
+                'middlewares' => $groupInfo['middlewares'] ?? [],
+            ];
+
+            $this->group($group, function (Router $router) use ($groupInfo) {
+                foreach ($groupInfo['routes'] ?? [] as $route) {
+                    $item = $router->addRoute(
+                        $route['method'] ?? 'GET',
+                        $route['path'] ?? '',
+                        $route['controller'] ?? null
+                    );
+
+                    if ($route['name'] ?? null) {
+                        $item->setName($route['name']);
+                    }
+
+                    if ($route['middlewares'] ?? null) {
+                        $item->addMiddlewares($route['middlewares']);
+                    }
+                }
+            });
+        }
+        return $this;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function addRoutesFromClassAttributes(string|array $class): self
+    {
+        $this->addRoutesFromArray(
+            (new AttributesParser((array)$class))->getResult()
+        );
+
+        return $this;
     }
 
 

@@ -15,5 +15,7 @@
             "Jsl\\Router\\": "src/"
         }
     },
-    "require": {}
+    "require": {
+        "php": ">=8.0"
+    }
 }
