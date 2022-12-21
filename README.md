@@ -148,7 +148,7 @@ $router->group(['prefix' => '/foo/(:num)'], function (Router $router) {
 ```
 
 ### Named routes
-Instead of remembering and keep updating/syncing liks, you can use named routes
+Instead of remembering all URLs and manually keep updating/syncing links, you can use named routes
 
 ```php
 // Add a route and give it a name
