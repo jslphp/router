@@ -166,3 +166,15 @@ $router->get('/foo/(:num)', function () { ... })->setName('something-foo');
 $path = $router->getNamedRoute('something-foo', [123]); 
 // Returns: /foo/123
 ```
+
+### Resolve a callback
+If you pass in a class name: `['ClassName', 'methodName']` or `'ClassName'` that has `__invoke()`, the class needs to be instantiated. The router will do that for you when you call `run()`, but if you want to have control of the instantiation (to inject dependencies through some IoC container for example), you can set your own custom class resolver.
+
+```php
+// An example that does what the default resolver does
+$router->setClassResolver(function (string $className): object {
+    return new $className;
+});
+```
+The argument to your function will always be a string, and the response must be a class instance.  
+The above is just a minimal (and quite useless) example. Your function can do what ever you want (like resolving it through a container) as long as you return a class instance.

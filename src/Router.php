@@ -41,6 +41,11 @@ class Router implements RouterInterface
     protected GroupsInterface $groups;
 
     /**
+     * @var callable
+     */
+    protected mixed $classResolver = null;
+
+    /**
      * @var string
      */
     protected string $routeClass;
@@ -72,6 +77,9 @@ class Router implements RouterInterface
         }
 
         $this->routeClass = $routeClass;
+
+        // Set defaut class resolver
+        $this->classResolver = fn ($class) => new $class;
     }
 
 
@@ -230,6 +238,21 @@ class Router implements RouterInterface
 
 
     /**
+     * Set function for instantiating callback classes
+     *
+     * @param callable $classResolver
+     *
+     * @return self
+     */
+    public function setClassResolver(callable $classResolver): self
+    {
+        $this->classResolver = $classResolver;
+
+        return $this;
+    }
+
+
+    /**
      * @inheritDoc
      */
     public function find(string $method = null, string $path = null): RouteInterface
@@ -250,17 +273,39 @@ class Router implements RouterInterface
         $arguments = $route->getArguments();
 
         foreach ($route->getMiddlewares() as $mw) {
+            $mw = $this->resolveCallback($mw);
+
             if (call_user_func_array($mw, $arguments) === false) {
                 return null;
             }
         }
 
         $controller = $route->getController();
-
-        if ($controller && is_array($controller) && count($controller) === 2 && is_string($controller[0])) {
-            $controller[0] = new $controller[0];
-        }
+        $controller = $this->resolveCallback($controller);
 
         return call_user_func_array($controller, $arguments);
+    }
+
+
+    /**
+     * Resolve callback
+     *
+     * @param array|callable $callback
+     *
+     * @return array|callable
+     */
+    protected function resolveCallback(array|callable $callback): array|callable
+    {
+        if (is_callable($callback) === false) {
+            if (is_string($callback) && class_exists($callback)) {
+                // Since it's a string with a valid class name, instantiate it
+                $callback = call_user_func_array($this->classResolver, [$callback]);
+            } else if (is_array($callback) && count($callback) === 2 && is_string($callback[0]) && class_exists($callback[0])) {
+                // Since it's an array containing two strings, instantiate the first element
+                $callback[0] = call_user_func_array($this->classResolver, [$callback[0]]);
+            }
+        }
+
+        return $callback;
     }
 }
