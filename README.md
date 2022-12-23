@@ -74,7 +74,7 @@ class SomeClass
 // Pass the class name to the router
 $router->addRoutesFromClassAttributes(SomeClass::class);
 
-// Pass a list of class names
+// Or pass a list of class names
 $router->addRoutesFromClassAttributes([
     SomeClass::class,
     SomeOtherClass::class,
@@ -89,7 +89,7 @@ Route callbacks comes in different shapes and sizes
 // Closure
 $route->get('/foo', function () { ... });
 
-// Passing class name and method name - The router will instatiate the class on run()
+// Passing class name and method name - The router will instantiate the class when running the router
 $router->get('/foo', ['Some\ClassName', 'someMethod']);
 
 // Passing instance and method name
