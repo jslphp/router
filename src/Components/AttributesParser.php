@@ -47,7 +47,11 @@ class AttributesParser implements AttributesParserInterface
 
         foreach ((array)$class as $className) {
             $reflectClass = new ReflectionClass($className);
-            $groups = array_merge($groups, $this->getGroup($reflectClass));
+            $group = $this->getGroup($reflectClass);
+
+            if ($group['routes']) {
+                $groups[] = $group;
+            }
         }
 
         return $groups;
@@ -63,30 +67,24 @@ class AttributesParser implements AttributesParserInterface
      */
     protected function getGroup(ReflectionClass $reflectClass): array
     {
-        $groups = [];
+        $group = [
+            'prefix' => '',
+            'middlewares' => null,
+            'routes' => []
+        ];
 
         foreach ($reflectClass->getAttributes(JslRouteGroup::class) as $attribute) {
-            $group = [
-                'prefix' => '',
-                'middlewares' => null,
-                'routes' => []
-            ];
-
             $args = $attribute->getArguments();
 
             $group['prefix'] = $args['prefix'] ?? '';
             $group['middlewares'] = $args['middlewares'] ?? [];
-
-            foreach ($reflectClass->getMethods(ReflectionMethod::IS_PUBLIC) as $reflectMethod) {
-                $group['routes'] = array_merge($group['routes'], $this->getRoutes($reflectMethod));
-            }
-
-            if ($group['routes']) {
-                $groups[] = $group;
-            }
         }
 
-        return $groups;
+        foreach ($reflectClass->getMethods(ReflectionMethod::IS_PUBLIC) as $reflectMethod) {
+            $group['routes'] = array_merge($group['routes'], $this->getRoutes($reflectMethod));
+        }
+
+        return $group;
     }
 
 
