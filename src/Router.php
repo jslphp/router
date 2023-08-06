@@ -153,6 +153,40 @@ class Router implements RouterInterface
 
 
     /**
+     * Set the callback for not found
+     *
+     * @param callable $callback
+     *
+     * @return self
+     */
+    public function setNotFoundRoute(callable $callback): self
+    {
+        $this->collection->setNotFound(
+            new $this->routeClass('', '', $callback)
+        );
+
+        return $this;
+    }
+
+
+    /**
+     * Set the callback for method not allowed
+     *
+     * @param callable $callback
+     *
+     * @return self
+     */
+    public function setMethodNotAllowedRoute(callable $callback): self
+    {
+        $this->collection->setMethodNotAllowed(
+            new $this->routeClass('', '', $callback)
+        );
+
+        return $this;
+    }
+
+
+    /**
      * @inheritDoc
      */
     public function addRoutesFromArray(array $groups): self

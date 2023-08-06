@@ -82,6 +82,26 @@ interface RouterInterface
 
 
     /**
+     * Set the callback for not found
+     *
+     * @param callable $callback
+     *
+     * @return self
+     */
+    public function setNotFoundRoute(callable $callback): self;
+
+
+    /**
+     * Set the callback for method not allowed
+     *
+     * @param callable $callback
+     *
+     * @return self
+     */
+    public function setMethodNotAllowedRoute(callable $callback): self;
+
+
+    /**
      * Add multiple routes from an array of groups and routes
      *
      * @param array $groups
@@ -134,6 +154,16 @@ interface RouterInterface
      * @throws ArgumentCountError if we got less arguments than needed
      */
     public function getNamedRoute(string $name, array $arguments = []): string;
+
+
+    /**
+     * Set function for instantiating callback classes
+     *
+     * @param callable $classResolver
+     *
+     * @return self
+     */
+    public function setClassResolver(callable $classResolver): self;
 
 
     /**

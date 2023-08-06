@@ -25,6 +25,16 @@ class RouteCollection implements RouteCollectionInterface
      */
     protected array $fixedArguments = [];
 
+    /**
+     * @var Route|null
+     */
+    protected ?Route $notFound = null;
+
+    /**
+     * @var Route|null
+     */
+    protected ?Route $notAllowed = null;
+
 
     /**
      * @param PlaceholdersInterface $placeholders
@@ -32,6 +42,46 @@ class RouteCollection implements RouteCollectionInterface
     public function __construct(PlaceholdersInterface $placeholders)
     {
         $this->placeholders = $placeholders;
+
+        $this->notFound = new Route('', '', function () {
+            http_response_code(404);
+            throw new RouteNotFoundException("Resource not found");
+        });
+
+        $this->notAllowed = new Route('', '', function () {
+            http_response_code(405);
+            throw new MethodNotAllowedException("Method not allowed for this resource");
+        });
+    }
+
+
+    /**
+     * Callback for not found routes
+     *
+     * @param RouteInterface $route
+     *
+     * @return self
+     */
+    public function setNotFound(RouteInterface $route): self
+    {
+        $this->notFound = $route;
+
+        return $this;
+    }
+
+
+    /**
+     * Callback for method not allowed routes
+     *
+     * @param RouteInterface $route
+     *
+     * @return self
+     */
+    public function setMethodNotAllowed(RouteInterface $route): self
+    {
+        $this->notAllowed = $route;
+
+        return $this;
     }
 
 
@@ -87,10 +137,8 @@ class RouteCollection implements RouteCollectionInterface
             }
         }
 
-        if ($wrongMethod) {
-            throw new MethodNotAllowedException("Method not allowed");
-        }
-
-        throw new RouteNotFoundException("Route not found");
+        return $wrongMethod
+            ? $this->notAllowed->addArguments($this->fixedArguments)
+            : $this->notFound->addArguments($this->fixedArguments);
     }
 }

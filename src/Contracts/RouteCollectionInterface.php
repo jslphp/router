@@ -8,6 +8,26 @@ use Jsl\Router\Exceptions\RouteNotFoundException;
 interface RouteCollectionInterface
 {
     /**
+     * Callback for not found routes
+     *
+     * @param RouteInterface $route
+     *
+     * @return self
+     */
+    public function setNotFound(RouteInterface $route): self;
+
+
+    /**
+     * Callback for method not allowed routes
+     *
+     * @param RouteInterface $route
+     *
+     * @return self
+     */
+    public function setMethodNotAllowed(RouteInterface $route): self;
+
+
+    /**
      * Add a route to the collection
      *
      * @param RouteInterface $route
