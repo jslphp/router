@@ -177,7 +177,7 @@ interface RouterInterface
      * @throws RouteNotFoundException if no pattern match found
      * @throws MethodNotAllowedException if pattern found but with wrong method
      */
-    public function find(string $method = null, string $path = null): RouteInterface;
+    public function find(?string $method = null, ?string $path = null): RouteInterface;
 
 
     /**
@@ -191,5 +191,5 @@ interface RouterInterface
      * @throws RouteNotFoundException if no pattern match found
      * @throws MethodNotAllowedException if pattern found but with wrong method
      */
-    public function run(string $method = null, string $path = null): mixed;
+    public function run(?string $method = null, ?string $path = null): mixed;
 }

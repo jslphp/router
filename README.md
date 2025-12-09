@@ -113,12 +113,12 @@ $router->get('/foo/(:hex)', function ($param) {
 });
 
 // (:any) - Matches any characters (up to the next /) (uses regex: [^\/]+)
-$router->get('/foo/(:num)', function ($param) {
+$router->get('/foo/(:any)', function ($param) {
     return "This is a route param: {$param}";
 });
 
 // (:all) - Matches everything (including /) (uses regex: .*)
-$router->get('/foo/(:num)', function ($param) {
+$router->get('/foo/(:all)', function ($param) {
     return "This is a route param: {$param}";
 });
 
