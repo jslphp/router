@@ -42,8 +42,9 @@ class Route implements RouteInterface
      * @param string $method
      * @param string $pattern
      * @param array|callable $controller
+     * @param NamesInterface|null $names
      */
-    public function __construct(string $method, string $pattern, array|callable $controller, NamesInterface $names = null)
+    public function __construct(string $method, string $pattern, array|callable $controller, ?NamesInterface $names = null)
     {
         $this->method = strtoupper($method);
         $this->pattern = '/' . trim($pattern, '/ ');

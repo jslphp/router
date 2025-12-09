@@ -59,10 +59,10 @@ class Router implements RouterInterface
      * @param string $routeClass
      */
     public function __construct(
-        RouteCollectionInterface $collection = null,
-        NamesInterface $names = null,
-        PlaceholdersInterface $placeholders = null,
-        GroupsInterface $groups = null,
+        ?RouteCollectionInterface $collection = null,
+        ?NamesInterface $names = null,
+        ?PlaceholdersInterface $placeholders = null,
+        ?GroupsInterface $groups = null,
         string $routeClass = Route::class
     ) {
         $this->placeholders = $placeholders ?? new Placeholders;
@@ -79,7 +79,7 @@ class Router implements RouterInterface
         $this->routeClass = $routeClass;
 
         // Set defaut class resolver
-        $this->classResolver = fn ($class) => new $class;
+        $this->classResolver = fn($class) => new $class;
     }
 
 
@@ -289,7 +289,7 @@ class Router implements RouterInterface
     /**
      * @inheritDoc
      */
-    public function find(string $method = null, string $path = null): RouteInterface
+    public function find(?string $method = null, ?string $path = null): RouteInterface
     {
         $method = strtoupper($method ?? $_SERVER['REQUEST_METHOD']);
         $path   = '/' . trim(strtok($path ?? $_SERVER['REQUEST_URI'], '?'), '/ ');
